@@ -1744,7 +1744,10 @@
 
       <div class="reveal">
         <div class="contact-form">
-          <form id="contactForm" onsubmit="handleSubmit(event)">
+          <form id="contactForm"
+                action="https://formspree.io/f/xeedoqgo"
+                method="POST"
+                onsubmit="handleSubmit(event)">
             <div class="form-row">
               <div class="form-group">
                 <label for="name"><span class="inline-pl">Imię *</span><span class="inline-en">Name *</span></label>
@@ -1877,20 +1880,32 @@
 
   reveals.forEach(el => observer.observe(el));
 
-  // Formularz kontaktowy – pokazuje potwierdzenie po wysłaniu
-  // (formularz działa jako mailto – kliknięcie przycisku otworzy klienta pocztowego)
-  function handleSubmit(e) {
+  // Formularz kontaktowy – Formspree
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = document.getElementById('contactForm');
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
-    const message = document.getElementById('message').value;
-    const subject = encodeURIComponent('Wiadomość od ' + name + ' – Igras International');
-    const body = encodeURIComponent('Imię: ' + name + '\nEmail: ' + email + '\nTelefon: ' + phone + '\n\nWiadomość:\n' + message);
-    window.location.href = 'mailto:karol.igras@icloud.com?subject=' + subject + '&body=' + body;
-    form.style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
+    const btn = document.getElementById('submitBtn');
+    const ispl = document.body.classList.contains('lang-pl');
+
+    btn.disabled = true;
+    btn.textContent = ispl ? 'Wysyłanie...' : 'Sending...';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = ispl ? 'Błąd – spróbuj ponownie' : 'Error – try again';
+    }
   }
 
   // Stagger reveal children
