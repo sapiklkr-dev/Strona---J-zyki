@@ -1439,6 +1439,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="nav-links">
         <li><a href="#about"><span class="inline-pl">O mnie</span><span class="inline-en">About</span></a></li>
         <li><a href="#services"><span class="inline-pl">Oferta</span><span class="inline-en">Services</span></a></li>
+        <li><a href="#pricing"><span class="inline-pl">Cennik</span><span class="inline-en">Pricing</span></a></li>
         <li><a href="#why"><span class="inline-pl">Dlaczego ja</span><span class="inline-en">Why me</span></a></li>
         <li><a href="#testimonials"><span class="inline-pl">Opinie</span><span class="inline-en">Reviews</span></a></li>
         <li><a href="#faq">FAQ</a></li>
@@ -1467,6 +1468,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="closeMobile()"><span class="inline-pl">O mnie</span><span class="inline-en">About</span></a>
   <a href="#services" onclick="closeMobile()"><span class="inline-pl">Oferta</span><span class="inline-en">Services</span></a>
+  <a href="#pricing" onclick="closeMobile()"><span class="inline-pl">Cennik</span><span class="inline-en">Pricing</span></a>
   <a href="#why" onclick="closeMobile()"><span class="inline-pl">Dlaczego ja</span><span class="inline-en">Why me</span></a>
   <a href="#testimonials" onclick="closeMobile()"><span class="inline-pl">Opinie</span><span class="inline-en">Reviews</span></a>
   <a href="#faq">FAQ</a>
@@ -2254,41 +2256,159 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
 
   // ===== QUIZ =====
-  const quizData = {
+  // ── QUIZ — 3 sety po 10 pytań, losowane przy każdym starcie ──
+  const quizSets = {
     en: [
-      { q: 'Choose the correct sentence:', opts: ['She go to school every day.','She goes to school every day.','She going to school every day.','She is go to school.'], ans: 1 },
-      { q: '"If I _____ more time, I would travel more."', opts: ['have','had','will have','am having'], ans: 1 },
-      { q: 'Which uses Present Perfect correctly?', opts: ['I have seen him yesterday.','I seen him last week.','I have never been to Japan.','I have went there.'], ans: 2 },
-      { q: '"Despite _____ tired, she continued working."', opts: ['she was','being','to be','was'], ans: 1 },
-      { q: 'The policy has been met with considerable _____ from the public.', opts: ['resistance','resisting','resist','resisted'], ans: 0 },
+      // SET 1
+      [
+        { q: 'Choose the correct sentence:', opts: ['She go to school every day.','She goes to school every day.','She going to school every day.','She is go to school.'], ans: 1 },
+        { q: '"If I _____ more time, I would travel more."', opts: ['have','had','will have','am having'], ans: 1 },
+        { q: 'Which uses Present Perfect correctly?', opts: ['I have seen him yesterday.','I seen him last week.','I have never been to Japan.','I have went there.'], ans: 2 },
+        { q: '"Despite _____ tired, she continued working."', opts: ['she was','being','to be','was'], ans: 1 },
+        { q: 'The policy has been met with considerable _____ from the public.', opts: ['resistance','resisting','resist','resisted'], ans: 0 },
+        { q: 'Choose the correct passive form: "They built the bridge in 1990."', opts: ['The bridge was built in 1990.','The bridge is built in 1990.','The bridge has built in 1990.','The bridge were built in 1990.'], ans: 0 },
+        { q: '"She suggested _____ for the job."', opts: ['me to apply','that I apply','to me apply','me apply'], ans: 1 },
+        { q: 'Which sentence is grammatically correct?', opts: ['I am used to wake up early.','I used to woke up early.','I am used to waking up early.','I use to wake up early.'], ans: 2 },
+        { q: '"Never _____ such a beautiful city!"', opts: ['I have seen','have I seen','I saw','saw I'], ans: 1 },
+        { q: 'Choose the correct form: "The news _____ very shocking."', opts: ['are','were','is','have been'], ans: 2 },
+      ],
+      // SET 2
+      [
+        { q: 'Which is correct?', opts: ['He don\'t like coffee.','He doesn\'t likes coffee.','He doesn\'t like coffee.','He not like coffee.'], ans: 2 },
+        { q: '"By the time she arrived, we _____ waiting for two hours."', opts: ['have been','had been','were','are'], ans: 1 },
+        { q: 'Choose the correct form: "If I _____ him, I would have told you."', opts: ['saw','have seen','had seen','would see'], ans: 2 },
+        { q: '"It was _____ who broke the window."', opts: ['him','he','his','himself'], ans: 1 },
+        { q: 'Which word best completes: "Despite _____ experience, he didn\'t get the job."', opts: ['his','he','him','himself'], ans: 0 },
+        { q: '"I wish I _____ more time to study."', opts: ['have','had','will have','would have'], ans: 1 },
+        { q: 'Choose the correct connector: "___ the bad weather, we went for a walk."', opts: ['Although','Despite','However','Because'], ans: 1 },
+        { q: 'Which sentence uses reported speech correctly? He said: "I am tired."', opts: ['He said that he is tired.','He said that he was tired.','He said that he were tired.','He said that he will be tired.'], ans: 1 },
+        { q: '"She recommended _____ the new restaurant."', opts: ['to try','trying','try','that try'], ans: 1 },
+        { q: 'Choose the correct form: "I have been learning English _____ five years."', opts: ['since','for','during','ago'], ans: 1 },
+      ],
+      // SET 3
+      [
+        { q: 'Which sentence is correct?', opts: ['I am agree with you.','I am agreeing with you.','I agree with you.','I agreeing with you.'], ans: 2 },
+        { q: '"Not only _____ late, but he also forgot the report."', opts: ['he was','was he','he is','is he'], ans: 1 },
+        { q: 'Choose the correct passive: "Someone has stolen my wallet."', opts: ['My wallet was stolen.','My wallet has stolen.','My wallet is stolen.','My wallet has been stolen.'], ans: 3 },
+        { q: '"She has known him _____ years."', opts: ['since','during','for','ago'], ans: 2 },
+        { q: 'Which is the correct 3rd conditional?', opts: ['If I would know, I would help.','If I had known, I would have helped.','If I knew, I would helped.','If I known, I had helped.'], ans: 1 },
+        { q: '"What I _____ is a long holiday."', opts: ['want','wants','wanting','wanted'], ans: 0 },
+        { q: 'Choose the academic synonym for "important":', opts: ['big','significant','nice','good'], ans: 1 },
+        { q: '"Under no circumstances _____ accept this offer."', opts: ['we will','will we','we would','would we'], ans: 1 },
+        { q: 'Which phrasal verb means "postpone"?', opts: ['put off','put on','put up','put in'], ans: 0 },
+        { q: '"Despite _____ the rain, she continued running."', opts: ['of','from','—','with'], ans: 2 },
+      ],
     ],
     de: [
-      { q: 'Wähle die richtige Form:', opts: ['Ich habe gestern ins Kino gegangen.','Ich bin gestern ins Kino gegangen.','Ich war gestern ins Kino gegangen.','Ich gehe gestern ins Kino.'], ans: 1 },
-      { q: '"Wenn ich Zeit _____, würde ich reisen."', opts: ['habe','hätte','hatte','haben'], ans: 1 },
-      { q: 'Welcher Satz ist korrekt?', opts: ['Er hat das Buch gelesen gestern.','Er hat gestern das Buch gelesen.','Er gestern hat das Buch gelesen.','Gestern er hat das Buch gelesen.'], ans: 1 },
-      { q: '"Trotz _____ Müdigkeit arbeitete sie weiter."', opts: ['seine','seiner','seinem','seinen'], ans: 1 },
-      { q: 'Die Maßnahmen wurden mit erheblichem _____ aufgenommen.', opts: ['Widerstand','Widerstands','Widerstände','Widerständen'], ans: 0 },
+      // SET 1
+      [
+        { q: 'Wähle die richtige Form:', opts: ['Ich habe gestern ins Kino gegangen.','Ich bin gestern ins Kino gegangen.','Ich war gestern ins Kino gegangen.','Ich gehe gestern ins Kino.'], ans: 1 },
+        { q: '"Wenn ich Zeit _____, würde ich reisen."', opts: ['habe','hätte','hatte','haben'], ans: 1 },
+        { q: 'Welcher Satz ist korrekt?', opts: ['Er hat das Buch gelesen gestern.','Er hat gestern das Buch gelesen.','Er gestern hat das Buch gelesen.','Gestern er hat das Buch gelesen.'], ans: 1 },
+        { q: '"Trotz _____ Müdigkeit arbeitete sie weiter."', opts: ['seine','seiner','seinem','seinen'], ans: 1 },
+        { q: 'Die Maßnahmen wurden mit erheblichem _____ aufgenommen.', opts: ['Widerstand','Widerstands','Widerstände','Widerständen'], ans: 0 },
+        { q: 'Welcher Artikel ist richtig? "___ Schule"', opts: ['der','die','das','dem'], ans: 1 },
+        { q: '"Ich _____ einen Hund." (haben)', opts: ['bin','habe','hat','ist'], ans: 1 },
+        { q: 'Welche Form ist korrekt?', opts: ['Er ist sehr schnell gelauft.','Er ist sehr schnell gelaufen.','Er hat sehr schnell gelaufen.','Er hat sehr schnell gelauft.'], ans: 1 },
+        { q: '"Das ist der Mann, _____ nebenan wohnt."', opts: ['der','die','das','den'], ans: 0 },
+        { q: 'Ich lerne Deutsch, _____ ich in Berlin arbeiten möchte.', opts: ['damit','obwohl','weil','wenn'], ans: 2 },
+      ],
+      // SET 2
+      [
+        { q: 'Welche Form ist richtig? "___ Kind spielt."', opts: ['der','die','das','dem'], ans: 2 },
+        { q: '"Sie _____ gestern ins Theater gegangen." (gehen)', opts: ['hat','ist','haben','sein'], ans: 1 },
+        { q: '"Wenn ich du _____, würde ich den Job annehmen."', opts: ['bin','war','ware','wäre'], ans: 3 },
+        { q: 'Welches Modalverb passt? "Du _____ das nicht tun — es ist verboten."', opts: ['musst','willst','darfst nicht','kannst'], ans: 2 },
+        { q: '"Eine neue Schule _____ gebaut." (Passiv Präsens)', opts: ['wird','ist','hat','war'], ans: 0 },
+        { q: '"Er sagt, er _____ krank." (Konjunktiv I)', opts: ['ist','sei','war','ware'], ans: 1 },
+        { q: 'Welcher Konnektor ist richtig? "Er ist nicht müde, _____ hat keine Lust."', opts: ['aber','sondern','denn','weil'], ans: 1 },
+        { q: 'Bilde das Kompositum: "die Arbeit + der Markt ="', opts: ['die Arbeitsmarkt','der Arbeitsmarkt','das Arbeitsmarkt','der Marktarbeit'], ans: 1 },
+        { q: '"Ich _____ heute leider nicht kommen." (können)', opts: ['kann nicht','nicht kann','kann kein','kein kann'], ans: 0 },
+        { q: '"Ich kenne die Frau, _____ fünf Sprachen spricht."', opts: ['der','die','das','den'], ans: 1 },
+      ],
+      // SET 3
+      [
+        { q: '"untersuchen" → das Substantiv ist:', opts: ['die Untersuchung','der Untersuchung','das Untersuchung','die Untersuchungen'], ans: 0 },
+        { q: 'Verneine den Satz: "Ich habe Zeit."', opts: ['Ich habe nicht Zeit.','Ich habe keine Zeit.','Ich bin keine Zeit.','Ich habe kein Zeit.'], ans: 1 },
+        { q: '"Das Museum _____ 1900 gegründet." (Passiv Präteritum)', opts: ['wird','wurde','ist','war'], ans: 1 },
+        { q: 'Welcher Satz ist höflicher?', opts: ['Gib mir das Buch!','Kannst du mir das Buch geben?','Ich will das Buch.','Das Buch her!'], ans: 1 },
+        { q: '"Sie lernt jeden Tag, _____ sie die Prüfung besteht."', opts: ['weil','obwohl','damit','wenn'], ans: 2 },
+        { q: '"Das ist das Buch, _____ ich dir empfohlen habe."', opts: ['der','die','das','dem'], ans: 2 },
+        { q: 'Wie heißt 17 auf Deutsch?', opts: ['siebenzehn','siebzehn','siebenzehn','siebenzahn'], ans: 1 },
+        { q: '"Sehr geehrte _____, ..." (Brief an unbekannte Person)', opts: ['Herr Müller','Damen und Herren','Freunde','Leute'], ans: 1 },
+        { q: 'Welches Hilfsverb braucht "schlafen" im Perfekt?', opts: ['sein','haben','werden','können'], ans: 1 },
+        { q: '"Mit freundlichen _____ " (E-Mail Abschluss)', opts: ['Grüße','Grüßen','Grüßen','Grüßen'], ans: 1 },
+      ],
     ],
     pl_for: [
-      { q: 'Wybierz poprawną formę:', opts: ['Ja mieszkam w Polsce od rok.','Ja mieszkam w Polsce od roku.','Ja mieszkam w Polsce przed rok.','Ja mieszkam w Polsce przez rok.'], ans: 1 },
-      { q: '"Gdybym miał więcej czasu, _____ więcej podróżować."', opts: ['chciałem','chciałbym','będę chciał','chcę'], ans: 1 },
-      { q: 'Który zdanie jest poprawne?', opts: ['Ona nigdy nie była w Polsce.','Ona nigdy była nie w Polsce.','Ona nie nigdy była w Polsce.','Ona była nigdy w Polsce nie.'], ans: 0 },
-      { q: '"Pomimo _____ zmęczenia, kontynuowała pracę."', opts: ['duże','dużego','dużemu','dużej'], ans: 1 },
-      { q: 'Nowe przepisy spotkały się ze znacznym _____ społeczeństwa.', opts: ['opór','oporu','oporem','oporze'], ans: 1 },
-    ]
+      // SET 1
+      [
+        { q: 'Wybierz poprawną formę:', opts: ['Ja mieszkam w Polsce od rok.','Ja mieszkam w Polsce od roku.','Ja mieszkam w Polsce przed rok.','Ja mieszkam w Polsce przez rok.'], ans: 1 },
+        { q: '"Gdybym miał więcej czasu, _____ więcej podróżować."', opts: ['chciałem','chciałbym','będę chciał','chcę'], ans: 1 },
+        { q: 'Który zdanie jest poprawne?', opts: ['Ona nigdy nie była w Polsce.','Ona nigdy była nie w Polsce.','Ona nie nigdy była w Polsce.','Ona była nigdy w Polsce nie.'], ans: 0 },
+        { q: '"Pomimo _____ zmęczenia, kontynuowała pracę."', opts: ['duże','dużego','dużemu','dużej'], ans: 1 },
+        { q: 'Nowe przepisy spotkały się ze znacznym _____ społeczeństwa.', opts: ['opór','oporu','oporem','oporze'], ans: 1 },
+        { q: 'Wybierz właściwą formę: "Mam _____."', opts: ['pies','psa','psem','psie'], ans: 1 },
+        { q: 'Jak powiedzieć "I don\'t have time" po polsku?', opts: ['Nie mam czas.','Nie mam czasu.','Nie jestem czas.','Nie ma czas.'], ans: 1 },
+        { q: '"Jestem _____." (nauczyciel — narzędnik)', opts: ['nauczyciel','nauczyciela','nauczycielem','nauczycielowi'], ans: 2 },
+        { q: 'Wybierz poprawną formę: "Wczoraj _____ całą książkę."', opts: ['czytam','czytałem','przeczytałem','przeczytam'], ans: 2 },
+        { q: '"Czy moge _____ kartą?" (zaplacic)', opts: ['zaplacic','zaplace','zapłacić','zaplacę'], ans: 2 },
+      ],
+      // SET 2
+      [
+        { q: 'Co znaczy "Jak się masz?"', opts: ['What is your name?','How are you?','Where are you from?','How old are you?'], ans: 1 },
+        { q: 'Wybierz właściwą formę: "Lubie _____."', opts: ['kawa','kawę','kawy','kawie'], ans: 1 },
+        { q: '"Ona jest _____." (lekarka — narzędnik)', opts: ['lekarka','lekarki','lekarką','lekarce'], ans: 2 },
+        { q: 'Jak powiedzieć "5 apples" po polsku?', opts: ['pięć jabłka','pięć jabłko','pięć jabłek','pięciu jabłek'], ans: 2 },
+        { q: '"Mieszkam _____ Polsce."', opts: ['w','na','do','z'], ans: 0 },
+        { q: 'Wybierz poprawny aspekt: "Codziennie _____ kawę." (pic)', opts: ['wypiłem','wypijam','piję','wypiję'], ans: 2 },
+        { q: '"Nie rozumiem" znaczy:', opts: ['I don\'t speak Polish.','I don\'t understand.','I don\'t know.','I don\'t want.'], ans: 1 },
+        { q: 'Jaka jest poprawna forma? "2 _____"', opts: ['jabłko','jabłka','jabłek','jabłkach'], ans: 1 },
+        { q: '"Wracam _____ pracy." (from work)', opts: ['do','z','na','w'], ans: 1 },
+        { q: 'Wybierz właściwy zaimek: "_____ masz lat?"', opts: ['Co','Jak','Ile','Gdzie'], ans: 2 },
+      ],
+      // SET 3
+      [
+        { q: 'Co oznacza "Miło mi"?', opts: ['Good morning','Nice to meet you','Thank you','Goodbye'], ans: 1 },
+        { q: 'Wybierz poprawne zdanie:', opts: ['Ona jest doktor.','Ona jest doktorem.','Ona jest doktora.','Ona jest doktorze.'], ans: 1 },
+        { q: '"Umowa _____ podpisana przez dyrektora." (strona bierna)', opts: ['jest','została','będzie','była'], ans: 1 },
+        { q: '"Prosze, _____ mówił wolniej." (zeby/ze)', opts: ['że','żeby','bo','ale'], ans: 1 },
+        { q: '"Uczę się polskiego, _____ to trudne." (chociaz)', opts: ['bo','że','chociaż','kiedy'], ans: 2 },
+        { q: 'Jak się mówi "Good evening" po polsku?', opts: ['Dzień dobry','Dobranoc','Dobry wieczór','Do widzenia'], ans: 2 },
+        { q: '"Nie mam _____." (samochód — dopełniacz)', opts: ['samochód','samochodu','samochodem','samochodowi'], ans: 1 },
+        { q: 'Wybierz właściwą formę liczebnika: "10 _____"', opts: ['książka','książki','książek','książkach'], ans: 2 },
+        { q: '"Moim zdaniem..." znaczy:', opts: ['In my opinion...','I don\'t know...','I agree...','However...'], ans: 0 },
+        { q: '"Przepraszam" można użyć, gdy:', opts: ['chcesz kogoś pozdrowić','chcesz przeprosić lub zwrócić uwagę','chcesz się pożegnać','chcesz zapytać o godzinę tylko'], ans: 1 },
+      ],
+    ],
   };
 
+  // Pick a random set, shuffle questions within it
+  function pickQuestions(lang) {
+    const sets = quizSets[lang];
+    const setIdx = Math.floor(Math.random() * sets.length);
+    const pool = [...sets[setIdx]];
+    // Shuffle
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool;
+  }
+
   let qLang = 'en', qIdx = 0, qScore = 0, qAnswered = false;
+  let currentQuestions = pickQuestions('en');
 
   function setQuizLang(lang, btn) {
     qLang = lang; qIdx = 0; qScore = 0; qAnswered = false;
+    currentQuestions = pickQuestions(lang);
     document.querySelectorAll('.quiz-lang-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderQuiz();
   }
 
   function renderQuiz() {
-    const qs = quizData[qLang];
+    const qs = currentQuestions;
     if (qIdx >= qs.length) { showQuizResult(); return; }
     const q = qs[qIdx];
     const pct = Math.round((qIdx / qs.length) * 100);
@@ -2305,7 +2425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function answerQuiz(el, idx) {
     if (qAnswered) return;
     qAnswered = true;
-    const q = quizData[qLang][qIdx];
+    const q = currentQuestions[qIdx];
     const btns = document.querySelectorAll('.quiz-option');
     btns[q.ans].classList.add('correct');
     if (idx === q.ans) qScore++; else el.classList.add('wrong');
@@ -2315,18 +2435,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function showQuizResult() {
     document.getElementById('quiz-prog').style.width = '100%';
     const ispl = document.body.classList.contains('lang-pl');
+    const total = currentQuestions.length;
     let lvl, desc;
-    if (qScore <= 1) { lvl = 'A1–A2'; desc = ispl ? 'Zaczynasz przygodę z językiem — idealne miejsce na solidne fundamenty!' : 'You\'re just starting — the perfect place to build solid foundations!'; }
-    else if (qScore <= 2) { lvl = 'B1'; desc = ispl ? 'Potrafisz się komunikować — czas na płynność i pewność siebie.' : 'You can communicate — now let\'s work on fluency and confidence.'; }
-    else if (qScore <= 3) { lvl = 'B2'; desc = ispl ? 'Dobra baza — skupimy się na precyzji i bogatszym słownictwie.' : 'Great foundation — we\'ll focus on precision and richer vocabulary.'; }
-    else { lvl = 'C1'; desc = ispl ? 'Zaawansowany poziom — pracujemy nad subtelnościami językowymi.' : 'Advanced level — we\'ll work on linguistic nuances and style.'; }
+    if (qScore <= 3)       { lvl = 'A1–A2'; desc = ispl ? 'Zaczynasz przygodę z językiem — idealne miejsce na solidne fundamenty!' : 'You\'re just starting — the perfect place to build solid foundations!'; }
+    else if (qScore <= 5)  { lvl = 'B1';    desc = ispl ? 'Potrafisz się komunikować — czas na płynność i pewność siebie.' : 'You can communicate — now let\'s work on fluency and confidence.'; }
+    else if (qScore <= 7)  { lvl = 'B2';    desc = ispl ? 'Dobra baza — skupimy się na precyzji i bogatszym słownictwie.' : 'Great foundation — we\'ll focus on precision and richer vocabulary.'; }
+    else                   { lvl = 'C1';    desc = ispl ? 'Zaawansowany poziom — pracujemy nad subtelnościami językowymi.' : 'Advanced level — we\'ll work on linguistic nuances and style.'; }
     document.getElementById('quiz-area').innerHTML = `
       <div class="quiz-result">
         <div class="quiz-result-level">${lvl}</div>
-        <div class="quiz-result-title">${ispl ? 'Twój poziom' : 'Your level'}</div>
+        <div class="quiz-result-title">${ispl ? 'Twój poziom' : 'Your level'} &nbsp;·&nbsp; ${qScore}/${total}</div>
         <div class="quiz-result-desc">${desc}</div>
         <a href="#booking" class="btn-primary">${ispl ? 'Umów bezpłatną lekcję próbną' : 'Book a free trial lesson'}</a><br>
-        <button class="quiz-restart" onclick="qIdx=0;qScore=0;renderQuiz()">${ispl ? 'Zrób test jeszcze raz' : 'Retake the test'}</button>
+        <button class="quiz-restart" onclick="qIdx=0;qScore=0;currentQuestions=pickQuestions(qLang);renderQuiz()">${ispl ? 'Spróbuj jeszcze raz (nowe pytania)' : 'Try again (new questions)'}</button>
       </div>`;
   }
 
