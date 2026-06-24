@@ -28,7 +28,6 @@
     "name": "Igras International",
     "description": "Indywidualne lekcje angielskiego, niemieckiego i polskiego online. Dla dzieci, młodzieży i dorosłych.",
     "url": "https://igrasinternational.pl",
-    "telephone": "+48667962618",
     "email": "karol.igras@icloud.com",
     "address": {
       "@type": "PostalAddress",
@@ -2431,15 +2430,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div class="c-value"><a href="mailto:karol.igras@icloud.com" style="color:inherit;">karol.igras@icloud.com</a></div>
             </div>
           </div>
-          <div class="contact-method">
-            <div class="c-icon">📞</div>
-            <div>
-              <div class="c-label" data-lang="pl">Telefon</div>
-              <div class="c-label" data-lang="en">Phone</div>
-              <!-- ZMIEŃ: wpisz swój numer telefonu -->
-              <div class="c-value"><a href="tel:+48667962618" style="color:inherit;">+48 667 962 618</a></div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -2512,7 +2502,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="footer-heading" data-lang="pl">Kontakt</div>
         <div class="footer-heading" data-lang="en">Contact</div>
         <div class="footer-contact-item"><span>✉️</span> <a href="mailto:karol.igras@icloud.com" style="color:inherit;">karol.igras@icloud.com</a></div>
-        <div class="footer-contact-item"><span>📞</span> <a href="tel:+48667962618" style="color:inherit;">+48 667 962 618</a></div>
       </div>
     </div>
 
@@ -2982,12 +2971,16 @@ window.addEventListener('load', function () {
   (function net () {
     var hero = document.getElementById('hero'); var canvas = document.getElementById('net-canvas');
     if (!hero || !canvas || REDUCED) return;
-    var ctx = canvas.getContext('2d'), w, h, dpr, pts = [], mouse = { x: -999, y: -999 };
+    var ctx = canvas.getContext('2d'), w, h, dpr, pts = [], mouse = { x: -999, y: -999 }, visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+    }
     function resize () { dpr = Math.min(window.devicePixelRatio || 1, 2); w = hero.offsetWidth; h = hero.offsetHeight;
       canvas.width = w * dpr; canvas.height = h * dpr; canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
     function build () { pts = []; var n = MOBILE ? 26 : Math.min(70, Math.floor(w / 22));
       for (var i = 0; i < n; i++) pts.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25 }); }
     function draw () {
+      if (!visible) { requestAnimationFrame(draw); return; }
       ctx.clearRect(0,0,w,h);
       for (var i = 0; i < pts.length; i++) { var p = pts[i]; p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1;
@@ -3032,16 +3025,21 @@ window.addEventListener('load', function () {
     var key = new THREE.PointLight(0xffe6b0, 2.2, 50); key.position.set(5, 5, 5); scene.add(key);
     var rim = new THREE.PointLight(0x3a5a9a, 1.6, 50); rim.position.set(-5, -3, 2); scene.add(rim);
 
-    var tx = 0, ty = 0;
+    var tx = 0, ty = 0, visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+    }
     hero.addEventListener('pointermove', function (e) { var r = hero.getBoundingClientRect();
       tx = ((e.clientX - r.left) / r.width - 0.5); ty = ((e.clientY - r.top) / r.height - 0.5); });
 
     function animate () {
+      requestAnimationFrame(animate);
+      if (!visible) return;
       mesh.rotation.y += 0.0035; mesh.rotation.x += 0.0014;
       mesh.rotation.y += (tx * 0.5 - mesh.rotation.y % (Math.PI*2)) * 0.0; // keep spin
       mesh.position.y += ((MOBILE ? 1.2 : 0.3) + ty * -0.6 - mesh.position.y) * 0.05;
       camera.position.x += (tx * 1.2 - camera.position.x) * 0.05; camera.lookAt(scene.position);
-      renderer.render(scene, camera); requestAnimationFrame(animate);
+      renderer.render(scene, camera);
     }
     animate();
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () {
